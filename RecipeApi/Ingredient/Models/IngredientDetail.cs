@@ -1,6 +1,6 @@
-﻿namespace RecipeApi.Ingredient
+﻿namespace RecipeApi.Ingredient.Models
 {
-    public class Ingredient
+    public record IngredientDetail
     {
         public int Id { get; set; }
         public string? Name { get; set; }

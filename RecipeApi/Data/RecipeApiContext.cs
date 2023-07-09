@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RecipeApi.Recipe;
-using RecipeApi.Ingredient;
 
 namespace RecipeApi.Data
 {
@@ -17,6 +16,6 @@ namespace RecipeApi.Data
 
         public DbSet<RecipeApi.Recipe.Recipe> Recipe { get; set; } = default!;
 
-        public DbSet<RecipeApi.Ingredient.Ingredient> Ingredient { get; set; } = default!;
+        public DbSet<Ingredient.Entities.Ingredient> Ingredient { get; set; } = default!;
     }
 }

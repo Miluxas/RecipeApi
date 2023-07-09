@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RecipeApi.Data;
+using RecipeApi.Helper;
+using RecipeApi.Ingredient.DTOs;
+using RecipeApi.Ingredient.Models;
 
 namespace RecipeApi.Ingredient
 {
@@ -13,111 +10,97 @@ namespace RecipeApi.Ingredient
     [ApiController]
     public class IngredientsController : ControllerBase
     {
-        private readonly RecipeApiContext _context;
+        private readonly IngredientService service;
+        private readonly ExceptionHandler exceptionHnadler;
+        private readonly IMapper _mapper;
 
-        public IngredientsController(RecipeApiContext context)
+        public IngredientsController(IMapper mapper, IngredientService service)
         {
-            _context = context;
+            this.service = service;
+            exceptionHnadler = new ExceptionHandler(Errors.ErrorDictionary);
+            this._mapper = mapper;
         }
 
         // GET: api/Ingredients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredient()
+        public async Task<ActionResult<IEnumerable<GetIngredientListResponseDto>>> GetIngredient()
         {
-          if (_context.Ingredient == null)
-          {
-              return NotFound();
-          }
-            return await _context.Ingredient.ToListAsync();
+            try
+            {
+                return Ok(await this.service.GetList());
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message); 
+                return exceptionHnadler.Handle(exc);
+            }
+
         }
 
         // GET: api/Ingredients/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ingredient>> GetIngredient(int id)
+        public async Task<ActionResult<GetIngredientDetailResponseDto>> GetIngredient(int id)
         {
-          if (_context.Ingredient == null)
-          {
-              return NotFound();
-          }
-            var ingredient = await _context.Ingredient.FindAsync(id);
-
-            if (ingredient == null)
+            try
             {
-                return NotFound();
+                return Ok(await this.service.GetDetail(id));
             }
-
-            return ingredient;
+            catch (Exception exc)
+            {
+                return exceptionHnadler.Handle(exc);
+            }
         }
 
         // PUT: api/Ingredients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIngredient(int id, Ingredient ingredient)
+        public async Task<IActionResult> PutIngredient(int id, UpdateIngredientRequestBodyDto ingredient)
         {
-            if (id != ingredient.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(ingredient).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await service.Update(id, this._mapper.Map<EditIngredient>(ingredient));
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exc)
             {
-                if (!IngredientExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return exceptionHnadler.Handle(exc);
             }
-
-            return NoContent();
         }
 
         // POST: api/Ingredients
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Ingredient>> PostIngredient(Ingredient ingredient)
+        public async Task<ActionResult<CreateIngredientResponseDto>> PostIngredient(CreateIngredientRequestBodyDto ingredient)
         {
-          if (_context.Ingredient == null)
-          {
-              return Problem("Entity set 'RecipeApiContext.Ingredient'  is null.");
-          }
-            _context.Ingredient.Add(ingredient);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var newIngredient = await service.Create(_mapper.Map<NewIngredient>(ingredient));
 
-            return CreatedAtAction("GetIngredient", new { id = ingredient.Id }, ingredient);
+                return CreatedAtAction("GetIngredient", new { id = newIngredient.Id }, newIngredient);
+            }
+            catch (Exception exc)
+            {
+                return exceptionHnadler.Handle(exc);
+            }
         }
+
+
+
 
         // DELETE: api/Ingredients/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteIngredient(int id)
         {
-            if (_context.Ingredient == null)
+            try
             {
-                return NotFound();
+                await this.service.Delete(id);
+                return NoContent();
             }
-            var ingredient = await _context.Ingredient.FindAsync(id);
-            if (ingredient == null)
+            catch (Exception exc)
             {
-                return NotFound();
+                return exceptionHnadler.Handle(exc);
             }
-
-            _context.Ingredient.Remove(ingredient);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool IngredientExists(int id)
-        {
-            return (_context.Ingredient?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
