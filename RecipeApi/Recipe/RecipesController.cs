@@ -116,7 +116,36 @@ namespace RecipeApi.Recipe
             }
         }
 
+        [HttpPost("{id}/rates")]
+        public async Task<ActionResult<GetRecipeDetailResponseDto>> AddRate(int id, AddRateRequestBodyDto newRate)
+        {
+            try
+            {
+                await service.AddRate(1,id,newRate.Value);
 
+                return Ok();
+            }
+            catch (Exception exc)
+            {
+                return exceptionHnadler.Handle(exc);
+            }
+        }
+
+
+        [HttpDelete("{id}/rates")]
+        public async Task<ActionResult<GetRecipeDetailResponseDto>> RemoveRate(int id)
+        {
+            try
+            {
+                await service.RemoveRate(1, id);
+
+                return Ok();
+            }
+            catch (Exception exc)
+            {
+                return exceptionHnadler.Handle(exc);
+            }
+        }
 
 
         // DELETE: api/Recipes/5

@@ -17,5 +17,6 @@ namespace RecipeApi.Data
         public DbSet<Recipe.Entities.Recipe> Recipe { get; set; } = default!;
         public DbSet<Ingredient.Entities.Ingredient> Ingredient { get; set; } = default!;
         public DbSet<RecipeIngredient> RecipeIngredient { get; set; } = default!;
+        public DbSet<Rating> Rating { get; set; } = default!;
     }
 }

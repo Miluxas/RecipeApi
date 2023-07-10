@@ -35,7 +35,7 @@ namespace RecipeApi.Recipe
             {
                 throw new NotFoundException();
             }
-            var recipe = await _context.Recipe.FindAsync(id);
+            var recipe = await _context.Recipe.Where(x=>x.Id==id).Include("RecipeIngredients").FirstAsync();
 
             if (recipe == null)
             {
@@ -125,13 +125,51 @@ namespace RecipeApi.Recipe
 
             return this.mapper.Map<RecipeDetail>(recipe);
         }
+        public async Task AddRate(int userId,int recipeId, int value)
+        {
+            if (_context.Rating == null)
+            {
+                throw new NotFoundException();
+            }
+            var foundRating = await _context.Rating.Include("User").FirstOrDefaultAsync(x => (x.RecipeId == recipeId && x.User.Id == userId));
+            if (foundRating == null)
+            {
+                foundRating =new Entities.Rating();
+                foundRating.User.Id=userId;
+                foundRating.RecipeId=recipeId;
+                _context.Rating.Add(foundRating);
+            }
+            foundRating.RatingValue = value;
+
+            _context.Entry(foundRating).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return ;
+        }
+        public async Task RemoveRate(int userId, int recipeId)
+        {
+            if (_context.Rating == null)
+            {
+                throw new NotFoundException();
+            }
+            var foundRating = await _context.Rating.Include("User").FirstOrDefaultAsync(x => (x.RecipeId == recipeId && x.User.Id == userId));
+            if (foundRating == null)
+            {
+                throw new NotFoundException();
+            }
+            _context.Rating.Remove(foundRating);
+            await _context.SaveChangesAsync();
+
+            return;
+        }
         public async Task<RecipeDetail> EditIngredient(int recipeId, EditIngredient editIngredient)
         {
             if (_context.RecipeIngredient == null)
             {
                 throw new NotFoundException();
             }
-            var foundIngredient = await _context.RecipeIngredient.FirstOrDefaultAsync(x=>(x.RecipeId==recipeId && x.Ingredient.Id==editIngredient.IngredientId));
+            var foundIngredient = await _context.RecipeIngredient.Include("Ingredient").FirstOrDefaultAsync(x=>(x.RecipeId==recipeId && x.Ingredient.Id==editIngredient.IngredientId));
             if (foundIngredient == null)
             {
                 throw new NotFoundException();
