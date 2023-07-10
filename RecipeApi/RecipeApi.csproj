@@ -29,6 +29,7 @@
   <ItemGroup>
     <Folder Include="Common\NewFolder\" />
     <Folder Include="Ingredient\Interfaces\" />
+    <Folder Include="Recipe\Interfaces\" />
   </ItemGroup>
 
 </Project>

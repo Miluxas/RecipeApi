@@ -1,6 +1,4 @@
-﻿using RecipeApi.RecipeIngredient;
-
-namespace RecipeApi.Recipe
+﻿namespace RecipeApi.Recipe.Entities
 {
     public class Recipe
     {
