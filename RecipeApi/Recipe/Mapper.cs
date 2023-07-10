@@ -10,9 +10,10 @@ namespace RecipeApi.Recipe
         {
             CreateMap<UpdateRecipeRequestBodyDto, EditRecipe>();
             CreateMap<CreateRecipeRequestBodyDto, NewRecipe>();
-            CreateMap<RecipeDetail, UpdateRecipeResponseDto>();
-            CreateMap<RecipeDetail, CreateRecipeResponseDto>();
             CreateMap<Entities.Recipe, RecipeDetail>();
+
+            CreateMap<AddIngredientRequestBodyDto, AddIngredient>();
+            CreateMap<EditIngredientRequestBodyDto, EditIngredient>();
         }
     }
 }

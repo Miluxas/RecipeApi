@@ -8,7 +8,7 @@
         public string? Instructions { get; set; }
         public int CookingTime { get; set; }
         public int DifficultyLevel { get; set; }
-        public List<RecipeIngredient.RecipeIngredient> RecipeIngredients { get; } = new();
+        public List<RecipeIngredient> RecipeIngredients { get; } = new();
         public List<Rating.Rating> Ratings { get; } = new();
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

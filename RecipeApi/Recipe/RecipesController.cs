@@ -54,12 +54,12 @@ namespace RecipeApi.Recipe
         // PUT: api/Recipes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipe(int id, UpdateRecipeRequestBodyDto ingredient)
+        public async Task<IActionResult> PutRecipe(int id, UpdateRecipeRequestBodyDto recipe)
         {
 
             try
             {
-                await service.Update(id, this._mapper.Map<EditRecipe>(ingredient));
+                await service.Update(id, this._mapper.Map<EditRecipe>(recipe));
                 return Ok();
             }
             catch (Exception exc)
@@ -71,13 +71,44 @@ namespace RecipeApi.Recipe
         // POST: api/Recipes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CreateRecipeResponseDto>> PostRecipe(CreateRecipeRequestBodyDto ingredient)
+        public async Task<ActionResult<GetRecipeDetailResponseDto>> PostRecipe(CreateRecipeRequestBodyDto recipe)
         {
             try
             {
-                var newRecipe = await service.Create(_mapper.Map<NewRecipe>(ingredient));
+                var newRecipe = await service.Create(_mapper.Map<NewRecipe>(recipe));
 
                 return CreatedAtAction("GetRecipe", new { id = newRecipe.Id }, newRecipe);
+            }
+            catch (Exception exc)
+            {
+                return exceptionHnadler.Handle(exc);
+            }
+        }
+
+        [HttpPost("{id}/ingredients")]
+        public async Task<ActionResult<GetRecipeDetailResponseDto>> AddIngredient(int id,AddIngredientRequestBodyDto newIngredient)
+        {
+            try
+            {
+                var recipe = await service.AddIngredient(id,_mapper.Map<AddIngredient>(newIngredient));
+
+                return CreatedAtAction("GetRecipe", new { id = recipe.Id }, recipe);
+            }
+            catch (Exception exc)
+            {
+                return exceptionHnadler.Handle(exc);
+            }
+        }
+
+
+        [HttpPut("{id}/ingredients")]
+        public async Task<ActionResult<GetRecipeDetailResponseDto>> EditIngredient(int id,EditIngredientRequestBodyDto oldIngredient)
+        {
+            try
+            {
+                var recipe = await service.EditIngredient(id, _mapper.Map<EditIngredient>(oldIngredient));
+
+                return CreatedAtAction("GetRecipe", new { id = recipe.Id }, recipe);
             }
             catch (Exception exc)
             {
