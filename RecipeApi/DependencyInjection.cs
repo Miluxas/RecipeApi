@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using RecipeApi.Auth;
 using RecipeApi.Data;
 using RecipeApi.Ingredient;
 using RecipeApi.Recipe;
@@ -16,7 +18,7 @@ namespace RecipeApi
                 b => b.MigrationsAssembly(typeof(RecipeApiContext).Assembly.FullName)), ServiceLifetime.Transient);
             services.AddScoped<IngredientService, IngredientService>();
             services.AddScoped<RecipeService, RecipeService>();
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddScoped<AuthService, AuthService>();
 
             return services;
         }

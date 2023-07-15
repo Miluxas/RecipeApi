@@ -1,13 +1,13 @@
-﻿using RecipeApi.Recipe.Entities;
+﻿
+using Microsoft.AspNetCore.Identity;
+using RecipeApi.Recipe.Entities;
 
-namespace RecipeApi.User
+namespace RecipeApi.Auth.Entities
 {
-    public class User
+    public class ApplicationUser:IdentityUser<int>
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
         public List<Recipe.Entities.Recipe> Favorites { get; } = new();
         public List<Rating> Ratings { get; } = new();
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecipeApi.Helper;
 using RecipeApi.Ingredient.DTOs;
@@ -8,13 +9,14 @@ namespace RecipeApi.Ingredient
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class IngredientsController : ControllerBase
+    [Authorize]
+    public class IngredientController : ControllerBase
     {
         private readonly IngredientService service;
         private readonly ExceptionHandler exceptionHnadler;
         private readonly IMapper _mapper;
 
-        public IngredientsController(IMapper mapper, IngredientService service)
+        public IngredientController(IMapper mapper, IngredientService service)
         {
             this.service = service;
             exceptionHnadler = new ExceptionHandler(Errors.ErrorDictionary);

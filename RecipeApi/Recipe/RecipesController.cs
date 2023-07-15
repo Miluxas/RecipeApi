@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecipeApi.Helper;
 using RecipeApi.Recipe.DTOs;
@@ -8,6 +9,7 @@ namespace RecipeApi.Recipe
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RecipesController : ControllerBase
     {
         private readonly RecipeService service;

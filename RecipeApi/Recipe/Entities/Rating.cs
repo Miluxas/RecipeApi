@@ -3,7 +3,7 @@
     public class Rating
     {
         public int Id { get; set; }
-        public User.User User { get; set; } = new();
+        public Auth.Entities.ApplicationUser User { get; set; } = new();
         public int RecipeId { get; set; }
         public int RatingValue { get; set; }
         public DateTime CreatedAt { get; set; }
