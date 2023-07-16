@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RecipeApi.Helper;
 using RecipeApi.Recipe.DTOs;
 using RecipeApi.Recipe.Models;
+using System.Security.Claims;
 
 namespace RecipeApi.Recipe
 {
@@ -122,7 +123,9 @@ namespace RecipeApi.Recipe
         public async Task<ActionResult<GetRecipeDetailResponseDto>> AddRate(int id, AddRateRequestBodyDto newRate)
         {
             try
+
             {
+                var idS= User.FindFirst(ClaimTypes.NameIdentifier);
                 await service.AddRate(1,id,newRate.Value);
 
                 return Ok();

@@ -35,5 +35,20 @@ namespace RecipeApi.Auth
                 return exceptionHnadler.Handle(exc);
             }
         }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> Register(RegisterRequestBodyDto model)
+        {
+            try
+            {
+                var result = await service.Register(model.Email,model.Username, model.Password);
+                return Ok(result);
+            }
+            catch (Exception exc)
+            {
+                return exceptionHnadler.Handle(exc);
+            }
+        }
     }
 }

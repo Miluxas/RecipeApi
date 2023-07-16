@@ -138,10 +138,11 @@ namespace RecipeApi.Recipe
                 foundRating.User.Id=userId;
                 foundRating.RecipeId=recipeId;
                 _context.Rating.Add(foundRating);
-            }
+            }else
+                _context.Entry(foundRating).State = EntityState.Modified;
+
             foundRating.RatingValue = value;
 
-            _context.Entry(foundRating).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
 

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol.Plugins;
+using RecipeApi.Auth.Entities;
 using RecipeApi.Auth.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -47,6 +49,19 @@ namespace RecipeApi.Auth
                 return loginResponse;
             }
             throw new UnauthorizedAccessException();
+        }
+
+        public async Task<LogedInUserInfo> Register(string email,string username, string password)
+        {
+            var newUser = new ApplicationUser();
+            newUser.UserName = username;
+            newUser.Email = email;
+            var resu = await userManager.CreateAsync(newUser,password);
+            if (resu.Succeeded)
+            {
+               return await this.Login(username, password);
+            }
+            throw new Exception(resu.Errors.First().Description);
         }
     }
 }
